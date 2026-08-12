@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Agenda do Salão
+Comment=Iniciar a agenda do salão
+Exec=bash -c 'cd "/mnt/data/agenda_salao" && ./run.sh'
+Terminal=true
+Categories=Development;

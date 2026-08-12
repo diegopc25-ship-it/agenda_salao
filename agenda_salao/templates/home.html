@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+<h1>{{ salon.name }}</h1>
+<p>Cuidados de cabelo e beleza mediante marcação.</p>
+<a class="button" href="{{ url_for('booking') }}">Marcar atendimento</a>
+</section>
+<section class="card">
+<h2>Serviços</h2>
+{% for s in services %}
+<div class="service"><strong>{{ s.name }}</strong><span>{{ s.description }}</span></div>
+{% endfor %}
+</section>
+<section class="card">
+<h2>Informações</h2>
+<p><strong>Endereço:</strong> {{ salon.address }}</p>
+<p><strong>Contacto:</strong> {{ salon.phone }}</p>
+<p><strong>Horário:</strong> {{ salon.hours }}</p>
+</section>
+{% endblock %}

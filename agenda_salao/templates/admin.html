@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-head"><h1>Painel do salão</h1><a href="{{ url_for('admin_logout') }}">Sair</a></div>
+
+<section class="card">
+<h2>Dados do salão</h2>
+<form method="post" action="{{ url_for('save_settings') }}" class="grid">
+<label>Nome<input name="name" value="{{ salon.name }}"></label>
+<label>Contacto<input name="phone" value="{{ salon.phone }}"></label>
+<label class="full">Endereço<input name="address" value="{{ salon.address }}"></label>
+<label class="full">Horário<input name="hours" value="{{ salon.hours }}"></label>
+<label>Abertura<input type="time" name="opening" value="{{ salon.opening }}"></label>
+<label>Fecho<input type="time" name="closing" value="{{ salon.closing }}"></label>
+<label>Intervalo entre horários (min)<input type="number" name="slot_minutes" min="5" step="5" value="{{ salon.slot_minutes }}"></label>
+<button class="button full">Guardar dados</button>
+</form>
+</section>
+
+<section class="card">
+<h2>Marcações</h2>
+{% if bookings %}
+{% for b in bookings %}
+<div class="booking">
+<div><strong>{{ b.booking_date }} · {{ b.booking_time }}</strong><br>{{ b.name }} · {{ b.phone }}<br>{{ b.service_name }}{% if b.notes %}<br><em>{{ b.notes }}</em>{% endif %}</div>
+<div class="actions">
+<span class="status {{ b.status }}">{{ b.status }}</span>
+{% if b.status != 'confirmado' %}<form method="post" action="{{ url_for('booking_action',bid=b.id,action='confirmado') }}"><button>Confirmar</button></form>{% endif %}
+{% if b.status != 'cancelado' %}<form method="post" action="{{ url_for('booking_action',bid=b.id,action='cancelado') }}"><button>Cancelar</button></form>{% endif %}
+</div>
+</div>
+{% endfor %}
+{% else %}<p>Ainda não há marcações.</p>{% endif %}
+</section>
+
+<section class="card">
+<h2>Bloquear agenda</h2>
+<p>Deixe as horas vazias para bloquear o dia inteiro.</p>
+<form method="post" action="{{ url_for('add_block') }}" class="grid">
+<label>Data<input type="date" name="date" required></label>
+<label>Início<input type="time" name="start_time"></label>
+<label>Fim<input type="time" name="end_time"></label>
+<label>Motivo<input name="reason" placeholder="Folga, férias, compromisso..."></label>
+<button class="button full">Bloquear</button>
+</form>
+{% for x in blocks %}
+<div class="booking"><div><strong>{{ x.block_date }}</strong> {% if x.start_time %}{{ x.start_time }}–{{ x.end_time }}{% else %}dia inteiro{% endif %}<br>{{ x.reason }}</div>
+<form method="post" action="{{ url_for('delete_block',bid=x.id) }}"><button>Remover</button></form></div>
+{% endfor %}
+</section>
+
+<section class="card">
+<h2>Serviços</h2>
+<form method="post" action="{{ url_for('add_service') }}" class="grid">
+<label>Nome<input name="name" required></label>
+<label>Descrição<input name="description"></label>
+<button class="button full">Adicionar serviço</button>
+</form>
+{% for s in services %}
+<div class="booking"><div><strong>{{ s.name }}</strong><br>{{ s.description }}</div>
+<form method="post" action="{{ url_for('toggle_service',sid=s.id) }}"><button>{{ 'Desativar' if s.active else 'Ativar' }}</button></form></div>
+{% endfor %}
+</section>
+
+<section class="card">
+<h2>Alterar palavra-passe</h2>
+<form method="post" action="{{ url_for('change_password') }}" class="grid">
+<label>Nova palavra-passe<input type="password" name="password" minlength="8" required></label>
+<button class="button">Alterar</button>
+</form>
+</section>
+{% endblock %}

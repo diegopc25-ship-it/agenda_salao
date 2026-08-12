@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+<h1>Cancelar marcação</h1>
+<p>Confirma o cancelamento da marcação de <strong>{{ booking.name }}</strong>?</p>
+<form method="post"><button class="button danger">Sim, cancelar</button></form>
+</div>
+{% endblock %}
